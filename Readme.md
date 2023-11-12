@@ -1,78 +1,119 @@
 ## Documentación del Diagrama de Entidad-Relación
 
-### Descripción General
-Este diagrama de entidad-relación representa la estructura de la base de datos para el sistema de gestión de préstamos y pagos.
 
 ### Entidades y Atributos
 
 1. **Agencia**
-   - **ID de Agencia**: Identificador para cada agencia.
+   - **ID de Agencia**: Identificador único para cada agencia.
    - **Nombre**: Nombre de la agencia.
    - **Nivel**: Nivel o categoría de la agencia.
    - **Relaciones**: 
      - **Agente**: Emplea a varios agentes.
-     - **Préstamo**: Origina o administra varios préstamos.
+     - **Préstamo**: Administra varios préstamos.
 
 2. **Agente**
-   - **ID del Agente**: Identificador para cada agente.
+   - **ID del Agente**: Identificador único para cada agente.
    - **Nombre del Agente**: Nombre completo del agente.
-   - **ID de Agencia**: Identificador de la agencia a la que está asignado.
+   - **ID de Agencia**: llave foránea que identifica la agencia a la que está asignado el agente.
    - **Relaciones**:
-     - **Pago**: Gestiona o recibe varios pagos.
-     - **Cliente**: Atiende o gestiona a varios clientes.
+     - **Cliente**: Atiende a varios clientes.
+     - **Préstamo**: Asociado a los préstamos gestionados o cobrados.
 
 3. **Cliente**
-   - **ID del Cliente**: Identificador para cada cliente.
+   - **ID del Cliente**: Identificador único para cada cliente.
    - **Nombre del Cliente**: Nombre completo del cliente.
-   - **Información de Contacto**: Detalles de contacto como teléfono.
+   - **Información de Contacto**: Detalles de contacto como teléfono, dirección, código postal.
    - **Relaciones**:
-     - **Préstamo**: Obtiene varios préstamos.
+     - **Préstamo**: Recibe uno o más préstamos.
 
 4. **Préstamo**
-   - **ID del Préstamo**: Identificador para cada préstamo.
+   - **ID del Préstamo**: Identificador único para cada préstamo.
    - **Monto del Préstamo**: Monto total del préstamo otorgado.
    - **Fecha de Inicio**: Fecha en que se inició el préstamo.
-   - **ID del Cliente**: Identificador del cliente que recibió el préstamo.
+   - **Duración del Préstamo**: Tiempo estipulado para el pago del préstamo.
+   - **ID del Cliente**: llave foránea que identifica al cliente que recibió el préstamo.
    - **Relaciones**:
-     - **Pago**: Recibe varios pagos.
+     - **Pago**: Vinculado a varios pagos.
+     - **Descuento**: Puede tener descuentos aplicables en diferentes semanas.
 
 5. **Pago**
-   - **ID del Pago**: Identificador para cada pago.
+   - **ID del Pago**: Identificador único para cada pago.
    - **Monto del Pago**: Monto del pago realizado.
    - **Fecha del Pago**: Fecha en que se realizó el pago.
-   - **ID del Préstamo**: Identificador del préstamo asociado a este pago.
-   - **ID del Agente**: Identificador del agente que procesó el pago.
-   - **Tarifa**: Tarifa asociada con el pago.
+   - **ID del Préstamo**: llave foránea que identifica el préstamo asociado a este pago.
+   - **ID del Agente**: llave foránea que identifica al agente que procesó el pago.
+   - **Tarifa**: Tarifa aplicada al pago, si corresponde.
+
+6. **Descuento**
+   - **ID del Descuento**: Identificador único para cada descuento.
+   - **Descripción del Crédito**: Descripción del crédito al que se aplica el descuento.
+   - **Semana**: Semana en la que se aplica el descuento.
+   - **Porcentaje de Descuento**: Porcentaje de descuento aplicado.
+   - **ID del Préstamo**: Llave foránea que vincula el descuento con un préstamo específico.
 
 ### Relaciones
 
-1. **Agencia - Préstamo**
+1. **Agencia - Agente**
    - **Tipo de Relación**: Uno a muchos.
-   - **Descripción**: Cada préstamo es administrado por una agencia específica.
-   - **Etiqueta**: administra.
+   - **Descripción**: Una agencia emplea a varios agentes.
+   - **Etiqueta**: emplea.
 
 2. **Agente - Cliente**
    - **Tipo de Relación**: Uno a muchos.
-   - **Descripción**: Cada agente es responsable de atender a ciertos clientes.
+   - **Descripción**: Un agente atiende a varios clientes.
    - **Etiqueta**: atiende.
 
-3. **Agencia - Agente**
+3. **Cliente - Préstamo**
    - **Tipo de Relación**: Uno a muchos.
-   - **Descripción**: Cada agencia emplea a varios agentes, que son responsables de gestionar los préstamos y pagos.
-   - **Etiqueta**: emplea.
+   - **Descripción**: Un cliente puede recibir varios préstamos.
+   - **Etiqueta**: recibe.
 
-4. **Agente - Pago**
+4. **Préstamo - Pago**
    - **Tipo de Relación**: Uno a muchos.
-   - **Descripción**: Los agentes gestionan varios pagos de los clientes en relación con los préstamos.
+   - **Descripción**: Un préstamo puede tener varios pagos asociados.
+   - **Etiqueta**: tiene pagos.
+
+5. **Agente - Préstamo**
+   - **Tipo de Relación**: Uno a muchos.
+   - **Descripción**: Un agente puede gestionar  a varios préstamos.
    - **Etiqueta**: gestiona.
 
-5. **Cliente - Préstamo**
+6. **Préstamo - Descuento**
    - **Tipo de Relación**: Uno a muchos.
-   - **Descripción**: Un cliente puede tener varios préstamos, cada uno con sus propias condiciones y términos.
-   - **Etiqueta**: tiene.
+   - **Descripción**: Un préstamo puede tener varios descuentos aplicables en diferentes semanas.
+   - **Etiqueta**: tiene descuentos.
 
-6. **Préstamo - Pago**
-   - **Tipo de Relación**: Uno a muchos.
-   - **Descripción**: Cada préstamo puede tener varios pagos asociados a lo largo de su duración.
-   - **Etiqueta**: recibe.
+
+Vamos a demostrar que el modelo entidad-relación y la base de datos cumplen con las formas normales:
+
+### 1. Primera Forma Normal (1FN)
+
+Una tabla está en la 1FN si:
+- Todos los atributos contienen solo valores atómicos (no hay grupos o conjuntos de valores).
+- Cada registro (fila) es único.
+
+**Demostración**:
+- En las tablas (Agencia, Agente, Cliente, Préstamo, Pago, Descuento), cada atributo contiene un solo valor en cada registro. Por ejemplo, `ID del Cliente`, `Nombre del Cliente`, ........, son todos atómicos.
+- Cada registro en estas tablas se puede identificar de manera única mediante su llave primaria (`ID del Préstamo`, `ID del Cliente`).
+
+### 2. Segunda Forma Normal (2FN)
+
+Una tabla está en la 2FN si:
+- Está en 1FN.
+- Todos los atributos no llave dependen completamente de la llave primaria.
+
+**Demostración**:
+- Cada tabla ya está en 1FN.
+- En cada tabla, todos los atributos no llave dependen completamente de su llave primaria. Por ejemplo, en la tabla `Préstamo`, atributos como `Monto del Préstamo`, `Fecha de Inicio`, dependen completamente de `ID del Préstamo`.
+
+### 3. Tercera Forma Normal (3FN)
+
+Una tabla está en 3FN si:
+- Está en 2FN.
+- No hay dependencias transitivas de atributos no llave sobre la llave primaria.
+
+**Demostración**:
+- Todas las tablas ya están en 2FN.
+- No hay dependencias transitivas en nuestras tablas.En la tabla `Pago`, aunque depende del `Préstamo` (a través de `ID del Préstamo`), no hay atributos en `Pago` que dependan de otros atributos no llave de `Préstamo`. 
+
 
