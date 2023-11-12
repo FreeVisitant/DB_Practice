@@ -6,6 +6,7 @@ class Agencia(db.Model):
     nombre = db.Column(db.String(255), nullable=False)
     nivel = db.Column(db.String(50))
     ubicacion = db.Column(db.String(255))
+    agentes = db.relationship('Agente', backref='agencia', lazy=True)
 
     def to_dict(self):
         return {
@@ -20,6 +21,9 @@ class Agente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
     agencia_id = db.Column(db.Integer, db.ForeignKey('agencias.id'))
+    clientes = db.relationship('Cliente', backref='agente', lazy=True)
+    prestamos = db.relationship('Prestamo', backref='agente', lazy=True)
+   
     def to_dict(self):
         return {
             'id': self.id,
@@ -33,6 +37,9 @@ class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
     informacion_contacto = db.Column(db.Text)
+    agente_id = db.Column(db.Integer, db.ForeignKey('agentes.id'))
+    prestamos = db.relationship('Prestamo', backref='cliente', lazy=True)
+    
     def to_dict(self):
         return {
             'id': self.id,
@@ -48,6 +55,10 @@ class Prestamo(db.Model):
     fecha_inicio = db.Column(db.Date, nullable=False)
     estado = db.Column(db.String(50))
     cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'))
+    agente_id = db.Column(db.Integer, db.ForeignKey('agentes.id'))
+    pagos = db.relationship('Pago', backref='prestamo', lazy=True)
+    descuentos = db.relationship('Descuento', backref='prestamo', lazy=True)
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -76,3 +87,19 @@ class Pago(db.Model):
             'tarifa': self.tarifa,
         }
 
+class Descuento(db.Model):
+    __tablename__ = 'descuentos'
+    id = db.Column(db.Integer, primary_key=True)
+    descripcion = db.Column(db.String(255))
+    semana = db.Column(db.Integer)
+    porcentaje_descuento = db.Column(db.Numeric(5, 2))
+    prestamo_id = db.Column(db.Integer, db.ForeignKey('prestamos.id'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'descripcion': self.descripcion,
+            'semana': self.semana,
+            'porcentaje_descuento': self.porcentaje_descuento,
+            'prestamo_id': self.prestamo_id
+        }

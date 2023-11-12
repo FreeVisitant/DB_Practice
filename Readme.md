@@ -61,7 +61,7 @@
 2. **Agente - Cliente**
    - **Tipo de Relación**: Uno a muchos.
    - **Descripción**: Un agente atiende a varios clientes.
-   - **Etiqueta**: atiende.
+   - **Etiqueta**: Atiende.
 
 3. **Cliente - Préstamo**
    - **Tipo de Relación**: Uno a muchos.
@@ -71,7 +71,7 @@
 4. **Préstamo - Pago**
    - **Tipo de Relación**: Uno a muchos.
    - **Descripción**: Un préstamo puede tener varios pagos asociados.
-   - **Etiqueta**: tiene pagos.
+   - **Etiqueta**: Recibe.
 
 5. **Agente - Préstamo**
    - **Tipo de Relación**: Uno a muchos.
@@ -83,6 +83,7 @@
    - **Descripción**: Un préstamo puede tener varios descuentos aplicables en diferentes semanas.
    - **Etiqueta**: tiene descuentos.
 
+Nota: La relación entre el agente y el pago, cuya relevancia depende de cómo se manejen los procesos de pago en la organización. Si los agentes están directamente involucrados en los pagos, la relación es válida; de lo contrario, podría ser más una asociación indirecta con los préstamos(lo mismo sucede con agencia préstamo).
 
 Vamos a demostrar que el modelo entidad-relación y la base de datos cumplen con las formas normales:
 

@@ -22,7 +22,16 @@ def get_agencia(id):
 @app.route('/agencias', methods=['POST'])
 def create_agencia():
     data = request.json
-    nueva_agencia = Agencia(nombre=data['nombre'], nivel=data.get('nivel'), ubicacion=data.get('ubicacion'))
+    if not data:
+        return jsonify({'mensaje': 'No se proporcionaron datos'}), 400
+
+    nombre = data.get('nombre')
+    if not nombre:
+        return jsonify({'mensaje': 'El nombre es obligatorio'}), 400
+
+    nueva_agencia = Agencia(nombre=nombre, 
+                            nivel=data.get('nivel'), 
+                            ubicacion=data.get('ubicacion'))
     db.session.add(nueva_agencia)
     db.session.commit()
     return jsonify(nueva_agencia.to_dict()), 201
@@ -65,8 +74,18 @@ def get_agente(id):
 @app.route('/agentes', methods=['POST'])
 def create_agente():
     data = request.json
-    nueva_agencia = Agencia.query.get_or_404(data['agencia_id'])
-    nuevo_agente = Agente(nombre=data['nombre'], agencia_id=nueva_agencia.id)
+    if not data:
+        return jsonify({'mensaje': 'No se proporcionaron datos'}), 400
+
+    nombre = data.get('nombre')
+    agencia_id = data.get('agencia_id')
+    if not nombre or agencia_id is None:
+        return jsonify({'mensaje': 'El nombre y el ID de la agencia son obligatorios'}), 400
+
+    if not Agencia.query.get(agencia_id):
+        return jsonify({'mensaje': 'Agencia no encontrada'}), 404
+
+    nuevo_agente = Agente(nombre=nombre, agencia_id=agencia_id)
     db.session.add(nuevo_agente)
     db.session.commit()
     return jsonify(nuevo_agente.to_dict()), 201
@@ -110,7 +129,14 @@ def get_cliente(id):
 @app.route('/clientes', methods=['POST'])
 def create_cliente():
     data = request.json
-    nuevo_cliente = Cliente(nombre=data['nombre'], informacion_contacto=data.get('informacion_contacto'))
+    if not data:
+        return jsonify({'mensaje': 'No se proporcionaron datos'}), 400
+
+    nombre = data.get('nombre')
+    if not nombre:
+        return jsonify({'mensaje': 'El nombre es obligatorio'}), 400
+
+    nuevo_cliente = Cliente(nombre=nombre, informacion_contacto=data.get('informacion_contacto'))
     db.session.add(nuevo_cliente)
     db.session.commit()
     return jsonify(nuevo_cliente.to_dict()), 201
@@ -217,3 +243,17 @@ def delete_pago(id):
     db.session.delete(pago)
     db.session.commit()
     return jsonify({'mensaje': 'Pago eliminado'})
+
+
+
+###Rutas adicionales para obtener prestamo de un cliente especifico y ruta para obtener pagos por un agente especifico
+@app.route('/clientes/<int:cliente_id>/prestamos', methods=['GET'])
+def get_prestamos_cliente(cliente_id):
+    prestamos = Prestamo.query.filter_by(cliente_id=cliente_id).all()
+    return jsonify([prestamo.to_dict() for prestamo in prestamos])
+
+
+@app.route('/agentes/<int:agente_id>/pagos', methods=['GET'])
+def get_pagos_agente(agente_id):
+    pagos = Pago.query.filter_by(agente_id=agente_id).all()
+    return jsonify([pago.to_dict() for pago in pagos])
