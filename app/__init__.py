@@ -8,6 +8,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Asegúrate de que los nombres de los archivos y las importaciones coincidan con la estructura de tu proyecto
+
 from app.models import Agencia, Agente, Cliente, Prestamo, Pago
-from app import routes  # Si tienes un archivo llamado routes.py para tus rutas
+from app import routes  
