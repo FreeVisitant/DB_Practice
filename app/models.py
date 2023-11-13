@@ -2,7 +2,7 @@ from . import db
 
 class Agencia(db.Model):
     __tablename__ = 'agencias'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(255), primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
     nivel = db.Column(db.String(50))
     ubicacion = db.Column(db.String(255))
@@ -18,9 +18,9 @@ class Agencia(db.Model):
 
 class Agente(db.Model):
     __tablename__ = 'agentes'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(255), primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
-    agencia_id = db.Column(db.Integer, db.ForeignKey('agencias.id'))
+    agencia_id = db.Column(db.String(255), db.ForeignKey('agencias.id'))
     clientes = db.relationship('Cliente', backref='agente', lazy=True)
     prestamos = db.relationship('Prestamo', backref='agente', lazy=True)
    
@@ -37,7 +37,7 @@ class Cliente(db.Model):
     id = db.Column(db.String(255), primary_key=True)
     nombre = db.Column(db.String(255), nullable=False)
     informacion_contacto = db.Column(db.Text)
-    agente_id = db.Column(db.Integer, db.ForeignKey('agentes.id'))
+    agente_id = db.Column(db.String(255), db.ForeignKey('agentes.id'))
     prestamos = db.relationship('Prestamo', backref='cliente', lazy=True)
     
     def to_dict(self):
@@ -50,16 +50,16 @@ class Cliente(db.Model):
 
 class Prestamo(db.Model):
     __tablename__ = 'prestamos'
-    id = db.Column(db.Integer, primary_key=True)
-    monto_otorgado = db.Column(db.Numeric(12, 2), nullable=False)
+    id = db.Column(db.String(255), primary_key=True)
+    monto_otorgado = db.Column(db.Numeric(12, 2), nullable=True)
     cargo = db.Column(db.Numeric(12, 2))
     total_a_pagar = db.Column(db.Numeric(12, 2))
     primer_pago = db.Column(db.Date)
     tarifa = db.Column(db.Numeric(12, 2))
-    fecha_inicio = db.Column(db.Date, nullable=False)
+    fecha_inicio = db.Column(db.Date, nullable=True)
     estado = db.Column(db.String(50))
     cliente_id = db.Column(db.String(255), db.ForeignKey('clientes.id'))
-    agente_id = db.Column(db.Integer, db.ForeignKey('agentes.id'))
+    agente_id = db.Column(db.String(255), db.ForeignKey('agentes.id'))
     pagos = db.relationship('Pago', backref='prestamo', lazy=True)
     descuentos = db.relationship('Descuento', backref='prestamo', lazy=True)
 
@@ -85,7 +85,7 @@ class Pago(db.Model):
     monto = db.Column(db.Numeric(12, 2), nullable=False)
     fecha_pago = db.Column(db.Date, nullable=False)
     prestamo_id = db.Column(db.Integer, db.ForeignKey('prestamos.id'))
-    agente_id = db.Column(db.Integer, db.ForeignKey('agentes.id'))
+    agente_id = db.Column(db.String(255), db.ForeignKey('agentes.id'))
     tarifa = db.Column(db.Numeric(12, 2))
     def to_dict(self):
         return {
@@ -103,7 +103,7 @@ class Descuento(db.Model):
     descripcion = db.Column(db.String(255))
     semana = db.Column(db.Integer)
     porcentaje_descuento = db.Column(db.Numeric(5, 2))
-    prestamo_id = db.Column(db.Integer, db.ForeignKey('prestamos.id'))
+    prestamo_id = db.Column(db.String(255), db.ForeignKey('prestamos.id'))
 
     def to_dict(self):
         return {
