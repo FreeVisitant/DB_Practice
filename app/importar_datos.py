@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+from sqlalchemy.exc import IntegrityError   
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from .models import Cliente, Prestamo, Agente 
@@ -82,22 +83,25 @@ finally:
 
 # datos de agentes
 agentes_unicos = set()  # Para mantener un registro de los agentes únicos ya añadidos
-
 for _, row in excel_data.iterrows():
     agente_id = row['Agente']
     
-    # Verificar si el agente ya fue añadido
-    if agente_id not in agentes_unicos:
+    # Verificar si el agente ya existe en la base de datos
+    agente_existente = session.query(Agente).filter_by(id=agente_id).first()
+    if not agente_existente:
         agente = Agente(
             id=agente_id,
-            nombre=row['Agente']  
+            nombre=row['Agente']
         )
         session.add(agente)
-        agentes_unicos.add(agente_id)
+        session.commit()  # Hacemos commit dentro del if para asegurar que solo guardamos si no existía previamente.
+    else:
+        # Si el agente ya existe en la base de datos, podrías decidir actualizar sus datos
+        # o simplemente continuar sin hacer nada.
+        pass
+
 
 session.commit()
 session.close()
 
 
-session.commit()
-session.close()
