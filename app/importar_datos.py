@@ -1,50 +1,53 @@
 import pandas as pd
 import json
 from sqlalchemy import create_engine
-from app.models import Cliente, Prestamo, Agente 
+from sqlalchemy.orm import sessionmaker
+from .models import Cliente, Prestamo, Agente 
 
-# Cadena de conexión y motor de SQLAlchemy
 DATABASE_URL = "postgresql://postgres:V1s1t%40nt@localhost/db_bank"
 engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
 
-# Ruta del archivo Excel
 ruta_excel = r'C:\Users\Visitant\Desktop\DB_Practice\data\BD PLATA XPRESS 2023. CRUDA SEMANA 44.xlsx'  
 
-# Lectura del archivo Excel, omitiendo las dos primeras filas
 excel_data = pd.read_excel(ruta_excel, skiprows=2)
+print(excel_data.columns)
+session = Session()
 
-# datos para Clientes
+# Importación de datos para Clientes
 for _, row in excel_data.iterrows():
     informacion_contacto = json.dumps({
-        "apellido_paterno": row['apellidos paternos'],
-        "apellido_materno": row['apellidos maternos'],
-        "direccion": row['direccion'],
-        "numero_exterior": row['numero exterior'],
-        "numero_interior": row['numero interior'],
-        "colonia": row['colonia'],
-        "codigo_postal": row['codigo postal'],
-        "municipio": row['municipio'],
-        "estado": row['estado']
+        "apellido_paterno": row['Apellido Paterno'],
+        "apellido_materno": row['Apellido Materno'],
+        "direccion": row['Direccion'],
+        "numero_exterior": row['No.Exterior'],
+        "numero_interior": row['No. Interior'],
+        "colonia": row['Colonia'],
+        "codigo_postal": row['Codigo postal'],
+        "municipio": row['Municipio'],
+        "estado": row['Estado']
     })
 
+    cliente_id = str(row['ID ']).strip()  # Convertir a cadena y eliminar espacios
     cliente = Cliente(
-        id=row['ID de este numero de credito'], 
-        nombre=row['Nombres'] + " " + row['apellidos paternos'] + " " + row['apellidos maternos'],
+        id=cliente_id,
+        nombre=f"{row['Nombres']} {row['Apellido Paterno']} {row['Apellido Materno']}",
         informacion_contacto=informacion_contacto
     )
-    engine.session.add(cliente)
+    session.add(cliente)
 
-# datos prestamo
-for _, row in excel_data.iterrows():
     prestamo = Prestamo(
         id=row['N° Credito'], 
         monto_otorgado=row['Monto otorgado'],
         cargo=row['Cargo'],
         total_a_pagar=row['Total a pagar'],
         primer_pago=row['Primer pago'],
-        tarifa=row['Tarifa']
+        tarifa=row['Tarifa'],
+        cliente_id=cliente_id  
     )
-    engine.session.add(prestamo)
+    session.add(prestamo)
+
+session.commit()
 
 #datos de agentes
 for _, row in excel_data.iterrows():
@@ -52,6 +55,7 @@ for _, row in excel_data.iterrows():
         nombre=row['Agente']  # 
         # por ahora lo q hay en el excel
     )
-    engine.session.add(agente)
+    session.add(agente)
 
-engine.session.commit()
+session.commit()
+session.close()
