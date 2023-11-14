@@ -224,6 +224,36 @@ python -m app.importar_datos
 ```
 
 
+## Como usar el esquema
+
+Antes de comenzar, asegúrese de tener instalado PostgreSQL en su sistema. También necesita tener `pg_dump` y `psql` accesibles desde la línea de comandos. Para configurar la base de datos, siga estos pasos:
+
+### 1. Crear la Base de Datos
+
+Primero, cree una base de datos vacía que utilizará para importar el esquema.
+
+```bash
+psql -U postgres -c "CREATE DATABASE db_bank;"
+```
+
+### 2. Importar el Esquema de la Base de Datos
+
+Utilice el archivo `esquema_db.sql` para crear las tablas y relaciones en su base de datos. Ejecute el siguiente comando:
+
+```bash
+psql -U postgres -d db_bank -f esquema_db.sql
+```
+
+### Uso
+
+Una vez que la base de datos está configurada, puede conectarse a ella utilizando `psql` o cualquier otra herramienta de administración de PostgreSQL como pgAdmin.
+
+Para conectarse a la base de datos a través de `psql`, utilice el siguiente comando:
+
+```bash
+psql -U postgres -d db_bank
+```
+
 ## Estado Actual del Proyecto
 
 ### Completo **L**
@@ -236,7 +266,7 @@ python -m app.importar_datos
 - Integración completa de modelos con vistas.
 - Front-end.
 - Pruebas unitarias (Testing).
-- Subir las tablas de postgres y comentar el código un poco más, mejorar el informe.
+- Comentar el código un poco más, mejorar el informe.
 
 # Autofeedback :)
 
