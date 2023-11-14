@@ -9,5 +9,5 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-from app.models import Agencia, Agente, Cliente, Prestamo, Pago
+from .models import Agencia, Agente, Cliente, Prestamo, Pago
 from app import routes  

@@ -1,3 +1,12 @@
+
+### Ideas de optimización de los Algoritmos, Cmbios y Sugerencias:
+
+1.  Sustitucion de los algoritmos de ordenación, se pueden hacer eficientes. Sugerencia: quicksort o mergesort para manejar grandes conjuntos de datos antes de realizar operaciones como la importación de datos, de gran utilidad para la ordenación. Una vez los datos ordenados una búsqueda binaria aseguraría una disminución en la complejidad algorítmica. Para Crud la idea de trabajo con árboles me parece más atractiva, implmentar un AVL mejoraría mucho las tareas de añadir, quitar, etc......
+
+2. Optimizar las consultas SQL, como elegir adecuadamente índices, reescribir subconsultas como joins cuando es más eficiente, consultar mejoras mas dinámicas, para grandes cantidades de datos se recomienda trabajar con la mochila :). Bromas aparte, uso de programación dinámica para tareas repetitivas.......
+
+
+
 ## Documentación del Diagrama de Entidad-Relación
 
 
@@ -117,4 +126,127 @@ Una tabla está en 3FN si:
 - Todas las tablas ya están en 2FN.
 - No hay dependencias transitivas en nuestras tablas.En la tabla `Pago`, aunque depende del `Préstamo` (a través de `ID del Préstamo`), no hay atributos en `Pago` que dependan de otros atributos no llave de `Préstamo`. 
 
+### Instrucciones:
+
+1. **Contar la Cantidad de Préstamos en la Base de Datos**:
+   ```sql
+   SELECT COUNT(*) FROM prestamos;
+   ```
+   
+2. **Listar Todos los Agentes y la Cantidad de Préstamos que Manejan**:
+   ```sql
+   SELECT agente_id, COUNT(*) AS numero_de_prestamos
+   FROM prestamos
+   GROUP BY agente_id;
+   ```
+   
+3. **Verificar un Agente Específico y sus Préstamos Asociados**:
+   ```sql
+   SELECT *
+   FROM prestamos
+   WHERE agente_id = 'AGP001';
+   ```
+   
+4. **Verificar la Unicidad de la Combinación Agente y Préstamo**:
+   ```sql
+   SELECT agente_id, id, COUNT(*)
+   FROM prestamos
+   GROUP BY agente_id, id
+   HAVING COUNT(*) > 1;
+   ```
+   
+5. **Listar Detalles de un Préstamo Específico**:
+   ```sql
+   SELECT *
+   FROM prestamos
+   WHERE id = 'id_prestamo';  -- Reemplazar 'id_prestamo' con el ID real del préstamo que se desea verificar verificar
+   ```
+
+
+## Configuración del Entorno
+
+### Entorno Virtual
+
+Un entorno virtual, `venv`, ha sido configurado para aislar las dependencias del proyecto.
+
+### Dependencias
+
+- Flask: 
+- SQLAlchemy: 
+- psycopg2: 
+- pandas: 
+
+## Estructura del Proyecto
+
+El proyecto sigue una estructura típica de Flask, con los siguientes directorios y archivos clave:
+
+- `app/`: Directorio que contiene la lógica 
+  - `__init__.py`: Inicializa la aplicación Flask
+  - `models.py`: Define los modelos
+  - `routes.py`: Rutas para manejar las solicitudes HTTP.
+  - `importar_datos.py`: Script para importar datos desde un archivo Excel a la base de datos.
+- `data/`: Donde se almacena el archivo Excel con los datos a importar.
+- `venv/`: Entorno virtual con las dependencias del proyecto.
+- `config.py`: Archivo de configuración para la aplicación Flask.
+- `run.py`: Script para ejecutar el servidor de Flask.
+
+## Base de Datos
+
+### Modelo de Datos
+
+La base de datos `db_bank` incluye las siguientes tablas:
+
+- `agencias`: Almacena datos sobre agencias.
+- `agentes`: Almacena datos sobre agentes.
+- `clientes`: Almacena datos sobre clientes.
+- `prestamos`: Almacena datos sobre préstamos.
+- `pagos`: Almacena datos sobre pagos.
+- `descuentos`: Almacena datos sobre descuentos aplicados a los préstamos.
+
+### Importación de Datos
+
+Los datos se importan desde el archivo Excel `BD PLATA XPRESS 2023. CRUDA SEMANA 44.xlsx`, utilizando el script `importar_datos.py`. Este script lee el archivo Excel, procesa los datos y los inserta en la base de datos correspondiente.
+
+### Iniciar la Aplicación
+
+Para iniciar la aplicación Flask, se utiliza el comando:
+
+```sh
+python run.py
+```
+
+### Importar Datos
+
+Para importar datos a la base de datos desde el archivo Excel, se ejecuta:
+
+```sh
+python -m app.importar_datos
+```
+
+
+## Estado Actual del Proyecto
+
+### Completo **L**
+
+- Base de datos y modelos SQLAlchemy funcionales, funciones de consultas posibles.
+- Rutas básicas para operaciones CRUD.
+
+### Pendiente **X**
+
+- Integración completa de modelos con vistas.
+- Front-end.
+- Pruebas unitarias (Testing).
+- Subir las tablas de postgres y comentar el código un poco más, mejorar el informe.
+
+# Instrucciones para Reconstruir la Base de Datos
+
+--Falta por subir.
+
+# Autofeedback :)
+
+-- Mejorar el trabajo con postgressql, me vi en situaciones de dificultad en el trabajo con modelos/importacion_de_datos/tablas en SQL.
+-- Estudiar más SQL, faltan cosas por aprender. 
+-- Mejorar comentarios en git jeje, trabajar más ordenado, recomendado ToDo List, cosa que me afecto.
+-- Mejorar el Debugg.
+-- Dejar de impresionarme con Python(siempre me impresionna:)).
 
