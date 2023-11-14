@@ -238,10 +238,6 @@ python -m app.importar_datos
 - Pruebas unitarias (Testing).
 - Subir las tablas de postgres y comentar el código un poco más, mejorar el informe.
 
-# Instrucciones para Reconstruir la Base de Datos
-
---Falta por subir.
-
 # Autofeedback :)
 
 -- Mejorar el trabajo con postgressql, me vi en situaciones de dificultad en el trabajo con modelos/importacion_de_datos/tablas en SQL.
