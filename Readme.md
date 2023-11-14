@@ -245,4 +245,5 @@ python -m app.importar_datos
 -- Mejorar comentarios en git jeje, trabajar más ordenado, recomendado ToDo List, cosa que me afecto.
 -- Mejorar el Debugg.
 -- Dejar de impresionarme con Python(siempre me impresionna:)).
+-- Este proyecto yo lo mejorare durante hoy y los próximos días.
 
