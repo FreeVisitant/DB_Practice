@@ -3,7 +3,7 @@ import json
 from sqlalchemy.exc import IntegrityError   
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Cliente, Prestamo, Agente 
+from .models import Cliente, Prestamo, Agente, Pago
 
 DATABASE_URL = "postgresql://postgres:V1s1t%40nt@localhost/db_bank"
 engine = create_engine(DATABASE_URL)
@@ -99,6 +99,26 @@ for _, row in excel_data.iterrows():
         # Si el agente ya existe en la base de datos, podrías decidir actualizar sus datos
         # o simplemente continuar sin hacer nada.
         pass
+
+
+#Pago data
+for _, row in excel_data.iterrows():
+    nuevo_pago = Pago(
+        monto_otorgado=row['Monto otorgado'],
+        primer_pago=row['Primer pago'],
+        prestamo_id=row['N° Credito'], 
+        agente_id=row['Agente'],
+        tarifa=row['Tarifa'] if 'Tarifa' in row else None
+    )
+    session.add(nuevo_pago)
+
+try:
+    session.commit()
+except Exception as e:
+    session.rollback()  
+    raise e
+finally:
+    session.close() 
 
 
 session.commit()
